@@ -1,20 +1,6 @@
 import nodemailer from 'nodemailer';
 
-export const sendEmail = async ({ to, subject, html }) => {
-  const requiredEnvVars = [
-    'SMTP_HOST',
-    'SMTP_PORT',
-    'SMTP_USER',
-    'SMTP_PASSWORD',
-    'SMTP_FROM',
-  ];
-
-  for (const envVar of requiredEnvVars) {
-    if (!process.env[envVar]) {
-      throw new Error(`${envVar} is not defined`);
-    }
-  }
-
+export const sendEmail = async ({ from, to, subject, html }) => {
   const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
     port: Number(process.env.SMTP_PORT),
@@ -26,7 +12,7 @@ export const sendEmail = async ({ to, subject, html }) => {
   });
 
   return transporter.sendMail({
-    from: process.env.SMTP_FROM,
+    from,
     to,
     subject,
     html,
